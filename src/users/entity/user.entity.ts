@@ -9,6 +9,7 @@ import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import { Todo } from '../../todo/entity/todo.entity';
 import { Role } from 'src/enums/role.enum';
+import { Activity } from 'src/activity/activiy.entity';
 
 const relationOptions: RelationOptions = {
   cascade: ['insert', 'update', 'remove'],
@@ -47,4 +48,7 @@ export class User {
 
   @OneToMany(() => Todo, (data) => data.user, relationOptions)
   userTodos: Todo[];
+
+  @OneToMany(() => Activity, (data) => data.user, relationOptions)
+  userActivities: Activity[];
 }

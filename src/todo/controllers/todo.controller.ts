@@ -40,24 +40,36 @@ export class TodoController {
     const newTodo: TodoDTO = {
       ...createTodo,
     };
-    console.log('user', user);
     return await this.todoService.create(newTodo, user.id);
   }
 
   @Public()
+  @Roles(Role.Admin)
   @Get(':id')
-  async getTodo(@Param('id') id): Promise<any> {
-    return await this.todoService.getTodo(id);
+  async getTodo(
+    @Param('id') id,
+    @CurrentUser() user,
+  ): Promise<any> {
+    return await this.todoService.getTodo(id, user.id);
   }
 
   @Put(':id')
-  async updateTodo(@Body() updateTodo: TodoDTO, @Param('id') id): Promise<any> {
+  @Roles(Role.Admin)
+  async updateTodo(
+    @Body() updateTodo: TodoDTO, 
+    @Param('id') id,
+    @CurrentUser() user,
+  ): Promise<any> {
     const { title, status } = updateTodo;
-    return await this.todoService.updateTodo(id, title, status);
+    return await this.todoService.updateTodo(id, title, status, user.id);
   }
 
   @Delete(':id')
-  async deleteTodo(@Param('id') id): Promise<any> {
-    return await this.todoService.deleteTodo(id);
+  @Roles(Role.Admin)
+  async deleteTodo(
+    @Param('id') id,
+    @CurrentUser() user,
+  ): Promise<any> {
+    return await this.todoService.deleteTodo(id, user.id);
   }
 }

@@ -8,10 +8,11 @@ import { AuthGuard } from '../guard/auth.guard';
 import { jwtConstants } from '../auth/constants';
 import { JwtModule } from '@nestjs/jwt';
 import { RolesGuard } from 'src/role/roles.guard';
+import { ActivityService } from 'src/activity/activity.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Todo]),
+    TypeOrmModule.forFeature([Todo, ActivityService]),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,

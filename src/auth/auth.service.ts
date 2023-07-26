@@ -8,6 +8,8 @@ import { DataSource } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entity/user.entity';
+import { EventName } from 'src/enums/event-names.enums';
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,7 @@ export class AuthService {
     private dataSource: DataSource,
     private usersService: UsersService,
     private jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async signIn(username, pass) {
@@ -34,6 +37,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const payload = { id: user.id, username: user.username, role: user.role };
+    this.eventEmitter.emit(EventName.SuccessLogin, {
+      todo: {
+        user_id: user.id,
+      },
+    });
     return {
       access_token: await this.jwtService.signAsync(payload),
       username: user.username,
